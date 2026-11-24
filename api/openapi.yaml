@@ -1,0 +1,296 @@
+# DRAFT OpenAPI 3.0 derived from public docs at https://phalynx.network/docs/api
+# (and a few paths clearly marked as coming from https://phalynx.network/ai).
+# The site advertises /api/openapi.yaml, but that URL did not serve YAML as of 2026-11-24.
+# This file is not an official specification. Path prefix and auth mapping are editorial
+# choices where the published pages disagree or are incomplete. See NOTES.md.
+openapi: 3.0.3
+info:
+  title: PhalynX Network API (draft)
+  version: draft-from-public-docs-2026-11-24
+  description: |
+    DRAFT. The public docs at https://phalynx.network/docs/api tell readers to
+    download /api/openapi.yaml, but that URL does not serve a YAML file (the SPA
+    HTML shell is returned). This document was derived from the examples on
+    /docs/api only, except where a path is explicitly annotated as coming from /ai.
+    Do not treat this as an official or complete specification.
+
+    IMPORTANT CONFLICTS with the /ai complete documentation (see NOTES.md):
+    /docs/api uses JWT Bearer auth from POST /v1/auth/register; /ai describes
+    Ed25519 Signature headers and does not document JWT. Path prefixes are mixed
+    in the source pages (/v1/... in curl examples vs /api/... in endpoint headings).
+    This draft uses servers[0].url = https://api.phalynx.network/v1 and endpoint
+    paths as /cases, /cases/{id}/evidence, and so on, matching the curl host plus
+    the heading path without a repeated /api prefix. That path mapping is an
+    editorial choice and may be wrong.
+  contact:
+    name: PhalynX Network
+    email: contact@phalynx.network
+    url: "https://phalynx.network"
+servers:
+  - url: https://api.phalynx.network/v1
+    description: Base URL shown in /docs/api curl examples and on /ai. Draft mapping only.
+tags:
+  - name: Auth
+  - name: Cases
+  - name: Jury
+  - name: Verdicts
+  - name: Webhooks
+  - name: Reputation
+    description: Documented on /ai only, not on /docs/api.
+security:
+  - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT authentication as documented on /docs/api. The /ai page instead specifies Ed25519 request signatures.
+  schemas:
+    Error:
+      type: object
+      description: Error body is not fully specified on the site. The /docs/api error table lists HTTP status codes only.
+      additionalProperties: true
+paths:
+  /auth/register:
+    post:
+      summary: Register a device or application and obtain a JWT
+      description: "Documented on /docs/api only (not on /ai). Source: https://phalynx.network/docs/api. The HTTP status for the success response is not explicitly stated; the page shows a Response block."
+      tags: [Auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              deviceId: ring_camera_001
+              deviceType: CAMERA
+              publicKey: "0x1a2b3c..."
+      responses:
+        "200":
+          description: Token response as shown on /docs/api.
+          content:
+            application/json:
+              example:
+                token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                expiresAt: "2025-10-23T14:30:00Z"
+  /cases:
+    post:
+      summary: Create a new case
+      description: >
+        Create a new case and initiate the evidence collection phase.
+        Heading on /docs/api is POST /api/cases. Curl examples use
+        https://api.phalynx.network/v1/cases. Source: /docs/api.
+      tags: [Cases]
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: false
+          schema:
+            type: string
+          description: Use to safely retry requests without duplicate effects.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              victimId: "0xVictimAddress"
+              claimValue: 5000
+              category: PROPERTY_DAMAGE
+              location:
+                lat: 15.9932
+                lon: -61.9450
+              metadata:
+                description: Broken window from rock throwing
+      responses:
+        "201":
+          description: 201 Created as shown on /docs/api
+          content:
+            application/json:
+              example:
+                caseId: 550e8400-e29b-41d4-a716-446655440000
+                victimBond: 250
+                defendantBond: 6000
+                status: FILED
+                createdAt: "2025-10-22T14:30:00Z"
+  /cases/{id}:
+    get:
+      summary: Get case
+      description: >
+        Returns case status, bond amounts, evidence Merkle root, verdict, and settlement state.
+        This GET is documented on /ai only, not on /docs/api. Source: https://phalynx.network/ai.
+        Response schema is not fully specified on the site.
+      tags: [Cases]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Case record. Response schema is not fully specified on the site.
+  /cases/{id}/evidence:
+    post:
+      summary: Submit evidence chunks for a case
+      description: >
+        Heading on /docs/api is POST /api/cases/:id/evidence, with a JSON body including
+        chunkIndex, totalChunks, dataHash, encryptedBlob, deviceSignature.
+        The /ai page instead describes multipart/form-data and omits totalChunks.
+        This draft follows /docs/api.
+      tags: [Cases]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              chunkIndex: 0
+              totalChunks: 10
+              dataHash: "sha256:a3f5d8..."
+              encryptedBlob: base64_encrypted_data
+              deviceSignature: "0x9f8e7d..."
+      responses:
+        "201":
+          description: 201 Created as shown on /docs/api
+          content:
+            application/json:
+              example:
+                chunkId: chunk_001
+                merkleProof: [hash1, hash2, hash3]
+                status: ATTESTED
+  /jury/{id}/commit:
+    post:
+      summary: Submit a hashed vote during the commit phase
+      description: >
+        Heading on /docs/api is POST /api/jury/:id/commit. /ai uses :caseId and a body
+        with only commitHash (no jurorId). This draft follows /docs/api.
+      tags: [Jury]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              jurorId: "0xJuror1"
+              commitHash: "sha256:commit_hash_of_verdict_plus_salt"
+      responses:
+        "201":
+          description: 201 Created
+          content:
+            application/json:
+              example:
+                commitId: commit_001
+                timestamp: "2025-10-22T15:45:00Z"
+                revealDeadline: "2025-10-22T16:00:00Z"
+  /jury/{id}/reveal:
+    post:
+      summary: Reveal the plaintext vote during the reveal phase
+      description: >
+        Heading on /docs/api is POST /api/jury/:id/reveal. /ai uses fields vote/salt
+        and a different response shape. This draft follows /docs/api.
+      tags: [Jury]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              jurorId: "0xJuror1"
+              verdict: GUILTY
+              salt: random_salt_string
+      responses:
+        "200":
+          description: 200 OK
+          content:
+            application/json:
+              example:
+                verified: true
+                timestamp: "2025-10-22T15:55:00Z"
+  /verdicts/{id}/burn:
+    post:
+      summary: Execute token burn after settlement completion
+      description: >
+        Heading on /docs/api is POST /api/verdicts/:id/burn with a JSON body
+        (verdictTokenId, burnProof) and a 200 response including burnTxHash,
+        burnedAmount, timestamp. /ai titles this "Initiate Token Burn (Not Guilty)"
+        and shows a different response (burnProof, burnTxHash) without a request body example.
+      tags: [Verdicts]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              verdictTokenId: vt_12345
+              burnProof: "0xMerkleProof..."
+      responses:
+        "200":
+          description: 200 OK as shown on /docs/api
+          content:
+            application/json:
+              example:
+                burnTxHash: "0xBTC_tx_hash"
+                burnedAmount: 450
+                timestamp: "2025-10-22T16:30:00Z"
+  /webhooks:
+    post:
+      summary: Register a webhook endpoint
+      description: >
+        Register webhook endpoints to receive real-time case updates.
+        /docs/api event names: CASE_FILED, VERDICT_REACHED, SETTLEMENT_COMPLETE.
+        /ai event names: verdict.finalized, settlement.complete (and a WebSocket event list).
+        This draft follows /docs/api.
+      tags: [Webhooks]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              url: "https://your-app.com/webhooks/phalynx"
+              events: [CASE_FILED, VERDICT_REACHED, SETTLEMENT_COMPLETE]
+      responses:
+        "200":
+          description: Registration response is not fully specified. A payload example for VERDICT_REACHED is published.
+  /reputation/{userId}:
+    get:
+      summary: Get Reputation Index (RI)
+      description: >
+        Returns current RI, RI history, case count, and category expertise scores.
+        Documented on /ai only, not on /docs/api. Source: https://phalynx.network/ai.
+        Response schema is not fully specified.
+      tags: [Reputation]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: RI record; fields listed in prose only.

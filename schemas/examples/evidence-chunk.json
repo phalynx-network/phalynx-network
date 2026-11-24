@@ -1,0 +1,19 @@
+{
+  "id": "550e8400-e29b-41d4-a716-446655440001",
+  "type": "EVIDENCE_CHUNK",
+  "timestamp": "2025-10-22T14:30:15Z",
+  "signature": "0x1a2b3c...",
+  "nonce": 2,
+  "payload": {
+    "caseId": "550e8400-e29b-41d4-a716-446655440000",
+    "chunkIndex": 0,
+    "totalChunks": 10,
+    "dataHash": "sha256:a3f5d8...",
+    "encryptedBlob": "base64_encrypted_data",
+    "merkleProof": [
+      "hash1",
+      "hash2",
+      "hash3"
+    ]
+  }
+}

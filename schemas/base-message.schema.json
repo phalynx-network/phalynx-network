@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phalynx.network/schemas/BaseMessage.schema.json",
+  "title": "BaseMessage",
+  "description": "Standard fields on all PhalynX protocol messages (identity, integrity, and ordering), as specified on the Protocol Specification page and the TypeScript interface BaseMessage.",
+  "$comment": "Derived automatically from a published example or TypeScript-shaped object on https://phalynx.network/docs/protocol. Property types and required fields reflect only the example or interface as shown on the site. additionalProperties is true because the public docs do not claim a closed field set. Placeholder values are illustrative, not live data.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "UUID v4"
+    },
+    "type": {
+      "type": "string",
+      "description": "Event discriminator (MessageType). Published examples use SOS, EVIDENCE_CHUNK, ATTESTATION, and VERDICT. The /ai complete documentation also lists SETTLEMENT."
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC"
+    },
+    "signature": {
+      "type": "string",
+      "description": "Ed25519 signature (shown as a hex-like string in examples)"
+    },
+    "nonce": {
+      "type": "integer",
+      "description": "Monotonic counter"
+    }
+  },
+  "required": [
+    "id",
+    "type",
+    "timestamp",
+    "signature",
+    "nonce"
+  ],
+  "additionalProperties": true,
+  "examples": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "type": "SOS",
+      "timestamp": "2025-10-22T14:30:00Z",
+      "signature": "0x1a2b3c...",
+      "nonce": 1
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "550e8400-e29b-41d4-a716-446655440002",
+  "type": "ATTESTATION",
+  "timestamp": "2025-10-22T14:35:00Z",
+  "signature": "0xKnowledgeNode...",
+  "nonce": 1,
+  "payload": {
+    "caseId": "550e8400-e29b-41d4-a716-446655440000",
+    "merkleRoot": "sha256:d9e1f2...",
+    "evidenceCount": 10,
+    "nodeId": "knowledge_node_alpha",
+    "attestationType": "COMPLETE"
+  }
+}

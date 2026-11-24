@@ -1,0 +1,8 @@
+{
+  "url": "https://your-app.com/webhooks/phalynx",
+  "events": [
+    "CASE_FILED",
+    "VERDICT_REACHED",
+    "SETTLEMENT_COMPLETE"
+  ]
+}

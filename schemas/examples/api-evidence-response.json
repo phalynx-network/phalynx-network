@@ -1,0 +1,9 @@
+{
+  "chunkId": "chunk_001",
+  "merkleProof": [
+    "hash1",
+    "hash2",
+    "hash3"
+  ],
+  "status": "ATTESTED"
+}

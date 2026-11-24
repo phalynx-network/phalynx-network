@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phalynx.network/schemas/EvidenceChunk.schema.json",
+  "title": "EvidenceChunk",
+  "description": "Evidence chunk message. Derived from the published JSON example on https://phalynx.network/docs/protocol.",
+  "$comment": "Derived automatically from a published example or TypeScript-shaped object on https://phalynx.network/docs/protocol. Property types and required fields reflect only the example or interface as shown on the site. additionalProperties is true because the public docs do not claim a closed field set. Placeholder values are illustrative, not live data.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "type": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "signature": {
+      "type": "string"
+    },
+    "nonce": {
+      "type": "integer"
+    },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "caseId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "chunkIndex": {
+          "type": "integer"
+        },
+        "totalChunks": {
+          "type": "integer"
+        },
+        "dataHash": {
+          "type": "string"
+        },
+        "encryptedBlob": {
+          "type": "string"
+        },
+        "merkleProof": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "caseId",
+        "chunkIndex",
+        "totalChunks",
+        "dataHash",
+        "encryptedBlob",
+        "merkleProof"
+      ],
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "id",
+    "type",
+    "timestamp",
+    "signature",
+    "nonce",
+    "payload"
+  ],
+  "additionalProperties": true,
+  "examples": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440001",
+      "type": "EVIDENCE_CHUNK",
+      "timestamp": "2025-10-22T14:30:15Z",
+      "signature": "0x1a2b3c...",
+      "nonce": 2,
+      "payload": {
+        "caseId": "550e8400-e29b-41d4-a716-446655440000",
+        "chunkIndex": 0,
+        "totalChunks": 10,
+        "dataHash": "sha256:a3f5d8...",
+        "encryptedBlob": "base64_encrypted_data",
+        "merkleProof": [
+          "hash1",
+          "hash2",
+          "hash3"
+        ]
+      }
+    }
+  ]
+}

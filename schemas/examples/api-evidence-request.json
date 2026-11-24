@@ -1,0 +1,7 @@
+{
+  "chunkIndex": 0,
+  "totalChunks": 10,
+  "dataHash": "sha256:a3f5d8...",
+  "encryptedBlob": "base64_encrypted_data",
+  "deviceSignature": "0x9f8e7d..."
+}

@@ -1,0 +1,12 @@
+{
+  "victimId": "0xVictimAddress",
+  "claimValue": 5000,
+  "category": "PROPERTY_DAMAGE",
+  "location": {
+    "lat": 15.9932,
+    "lon": -61.945
+  },
+  "metadata": {
+    "description": "Broken window from rock throwing"
+  }
+}

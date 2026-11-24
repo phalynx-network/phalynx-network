@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phalynx.network/schemas/VERDICT.schema.json",
+  "title": "VERDICT",
+  "description": "Jury verdict message. Derived from the published JSON example on https://phalynx.network/docs/protocol.",
+  "$comment": "Derived automatically from a published example or TypeScript-shaped object on https://phalynx.network/docs/protocol. Property types and required fields reflect only the example or interface as shown on the site. additionalProperties is true because the public docs do not claim a closed field set. Placeholder values are illustrative, not live data.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "type": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "signature": {
+      "type": "string"
+    },
+    "nonce": {
+      "type": "integer"
+    },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "caseId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "verdict": {
+          "type": "string"
+        },
+        "voteBreakdown": {
+          "type": "object",
+          "properties": {
+            "guilty": {
+              "type": "integer"
+            },
+            "notGuilty": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "guilty",
+            "notGuilty"
+          ],
+          "additionalProperties": true
+        },
+        "jurorIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "consensusTimestamp": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "caseId",
+        "verdict",
+        "voteBreakdown",
+        "jurorIds",
+        "consensusTimestamp"
+      ],
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "id",
+    "type",
+    "timestamp",
+    "signature",
+    "nonce",
+    "payload"
+  ],
+  "additionalProperties": true,
+  "examples": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440003",
+      "type": "VERDICT",
+      "timestamp": "2025-10-22T16:00:00Z",
+      "signature": "0xJuryPanel...",
+      "nonce": 1,
+      "payload": {
+        "caseId": "550e8400-e29b-41d4-a716-446655440000",
+        "verdict": "GUILTY",
+        "voteBreakdown": {
+          "guilty": 5,
+          "notGuilty": 2
+        },
+        "jurorIds": [
+          "0xJuror1",
+          "0xJuror2",
+          "0xJuror3",
+          "0xJuror4",
+          "0xJuror5",
+          "0xJuror6",
+          "0xJuror7"
+        ],
+        "consensusTimestamp": "2025-10-22T15:55:00Z"
+      }
+    }
+  ]
+}

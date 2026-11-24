@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phalynx.network/schemas/SOS.schema.json",
+  "title": "SOS",
+  "description": "SOS event message. Derived from the published JSON example on https://phalynx.network/docs/protocol.",
+  "$comment": "Derived automatically from a published example or TypeScript-shaped object on https://phalynx.network/docs/protocol. Property types and required fields reflect only the example or interface as shown on the site. additionalProperties is true because the public docs do not claim a closed field set. Placeholder values are illustrative, not live data.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "type": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "signature": {
+      "type": "string"
+    },
+    "nonce": {
+      "type": "integer"
+    },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "victimId": {
+          "type": "string"
+        },
+        "claimValue": {
+          "type": "integer"
+        },
+        "category": {
+          "type": "string"
+        },
+        "location": {
+          "type": "object",
+          "properties": {
+            "lat": {
+              "type": "number"
+            },
+            "lon": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "lat",
+            "lon"
+          ],
+          "additionalProperties": true
+        },
+        "deviceId": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "victimId",
+        "claimValue",
+        "category",
+        "location",
+        "deviceId"
+      ],
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "id",
+    "type",
+    "timestamp",
+    "signature",
+    "nonce",
+    "payload"
+  ],
+  "additionalProperties": true,
+  "examples": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "type": "SOS",
+      "timestamp": "2025-10-22T14:30:00Z",
+      "signature": "0x1a2b3c...",
+      "nonce": 1,
+      "payload": {
+        "victimId": "0xVictimAddress",
+        "claimValue": 5000,
+        "category": "PROPERTY_DAMAGE",
+        "location": {
+          "lat": 15.9932,
+          "lon": -61.945
+        },
+        "deviceId": "ring_camera_001"
+      }
+    }
+  ]
+}

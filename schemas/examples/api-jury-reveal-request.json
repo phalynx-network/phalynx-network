@@ -1,0 +1,5 @@
+{
+  "jurorId": "0xJuror1",
+  "verdict": "GUILTY",
+  "salt": "random_salt_string"
+}

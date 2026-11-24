@@ -1,0 +1,4 @@
+{
+  "jurorId": "0xJuror1",
+  "commitHash": "sha256:commit_hash_of_verdict_plus_salt"
+}

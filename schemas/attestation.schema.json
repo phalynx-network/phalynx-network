@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phalynx.network/schemas/ATTESTATION.schema.json",
+  "title": "ATTESTATION",
+  "description": "Knowledge Node attestation message. Derived from the published JSON example on https://phalynx.network/docs/protocol.",
+  "$comment": "Derived automatically from a published example or TypeScript-shaped object on https://phalynx.network/docs/protocol. Property types and required fields reflect only the example or interface as shown on the site. additionalProperties is true because the public docs do not claim a closed field set. Placeholder values are illustrative, not live data.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "type": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "signature": {
+      "type": "string"
+    },
+    "nonce": {
+      "type": "integer"
+    },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "caseId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "merkleRoot": {
+          "type": "string"
+        },
+        "evidenceCount": {
+          "type": "integer"
+        },
+        "nodeId": {
+          "type": "string"
+        },
+        "attestationType": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "caseId",
+        "merkleRoot",
+        "evidenceCount",
+        "nodeId",
+        "attestationType"
+      ],
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "id",
+    "type",
+    "timestamp",
+    "signature",
+    "nonce",
+    "payload"
+  ],
+  "additionalProperties": true,
+  "examples": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440002",
+      "type": "ATTESTATION",
+      "timestamp": "2025-10-22T14:35:00Z",
+      "signature": "0xKnowledgeNode...",
+      "nonce": 1,
+      "payload": {
+        "caseId": "550e8400-e29b-41d4-a716-446655440000",
+        "merkleRoot": "sha256:d9e1f2...",
+        "evidenceCount": 10,
+        "nodeId": "knowledge_node_alpha",
+        "attestationType": "COMPLETE"
+      }
+    }
+  ]
+}
